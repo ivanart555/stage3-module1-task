@@ -27,7 +27,6 @@ public class ContentReader {
             }
         } catch (IOException e) {
             LOGGER.warning("Failed to read file: " + fileName);
-
         }
 
         return content;

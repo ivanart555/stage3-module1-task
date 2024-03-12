@@ -11,5 +11,5 @@ public interface GenericRepository<T> {
 
     T update(T t);
 
-    Boolean delete(Long id);
+    Boolean deleteById(Long id);
 }
