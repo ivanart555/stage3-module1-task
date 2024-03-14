@@ -13,7 +13,6 @@ public class NewsRepositoryImpl implements NewsRepository {
     @Override
     public News create(News newsModel) {
         newsModel.setId(getNextId());
-        datasource.getNews().add(newsModel);
 
         return newsModel;
     }
@@ -57,4 +56,5 @@ public class NewsRepositoryImpl implements NewsRepository {
 
         return maxId + 1;
     }
+
 }
