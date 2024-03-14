@@ -1,0 +1,16 @@
+group 'com.mjc.school'
+version 'unspecified'
+
+dependencies {
+    implementation project(':module-web')
+    implementation project(':module-service')
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "com.mjc.school.Main"
+    }
+    archiveClassifier = "all"
+    archiveClassifier = "all"
+    duplicatesStrategy = 'exclude'
+}
