@@ -1,7 +1,15 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.repository.generic.GenericRepository;
-import com.mjc.school.repository.model.NewsModel;
+import java.util.List;
 
-public interface NewsRepository extends GenericRepository<NewsModel> {
+public interface NewsRepository<T> {
+    T create(T t);
+
+    List<T> readAll();
+
+    T readById(Long id);
+
+    T update(T t);
+
+    Boolean deleteById(Long id);
 }

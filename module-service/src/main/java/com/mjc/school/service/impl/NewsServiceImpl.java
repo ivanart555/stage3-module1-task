@@ -17,15 +17,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class NewsServiceImpl implements NewsService {
-    private static final Validator VALIDATOR =
+public class NewsServiceImpl implements NewsService<NewsDto> {
+    private final Validator VALIDATOR =
             Validation.byDefaultProvider()
                     .configure()
                     .messageInterpolator(new ParameterMessageInterpolator())
                     .buildValidatorFactory()
                     .getValidator();
     private static final Logger LOGGER = Logger.getLogger(NewsServiceImpl.class.getName());
-    private final NewsRepository newsRepository = new NewsRepositoryImpl();
+    private final NewsRepository<NewsModel> newsRepository = new NewsRepositoryImpl();
 
     @Override
     public NewsDto create(NewsDto newsDto) {
@@ -45,12 +45,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDto> findAll() {
+    public List<NewsDto> readAll() {
         return NewsMapper.INSTANCE.newsListToNewsDtoList(newsRepository.readAll());
     }
 
     @Override
-    public NewsDto findById(Long id) {
+    public NewsDto readById(Long id) {
         NewsModel foundNews = null;
         try {
             foundNews = newsRepository.readById(id);

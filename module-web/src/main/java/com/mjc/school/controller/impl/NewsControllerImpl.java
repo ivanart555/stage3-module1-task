@@ -8,7 +8,7 @@ import com.mjc.school.service.impl.NewsServiceImpl;
 import java.util.List;
 
 public class NewsControllerImpl implements NewsController {
-    private final NewsService newsService = new NewsServiceImpl();
+    private final NewsService<NewsDto> newsService = new NewsServiceImpl();
 
     @Override
     public NewsDto create(NewsDto newsDto) {
@@ -17,12 +17,12 @@ public class NewsControllerImpl implements NewsController {
 
     @Override
     public List<NewsDto> findAll() {
-        return newsService.findAll();
+        return newsService.readAll();
     }
 
     @Override
     public NewsDto findById(Long id) {
-        return newsService.findById(id);
+        return newsService.readById(id);
     }
 
     @Override

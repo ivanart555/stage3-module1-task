@@ -7,7 +7,7 @@ import com.mjc.school.repository.model.NewsModel;
 import java.util.List;
 import java.util.Optional;
 
-public class NewsRepositoryImpl implements NewsRepository {
+public class NewsRepositoryImpl implements NewsRepository<NewsModel> {
     private final Datasource datasource = Datasource.getInstance();
 
     @Override

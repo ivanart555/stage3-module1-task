@@ -1,7 +1,15 @@
 package com.mjc.school.service;
 
-import com.mjc.school.service.dto.NewsDto;
-import com.mjc.school.service.generic.GenericService;
+import java.util.List;
 
-public interface NewsService extends GenericService<NewsDto> {
+public interface NewsService<T> {
+    T create(T t);
+
+    List<T> readAll();
+
+    T readById(Long id);
+
+    T update(T t);
+
+    Boolean deleteById(Long id);
 }

@@ -16,6 +16,9 @@ public class DataGenerator {
     private static final int NEWS_COUNT_TO_GENERATE = 20;
     private static final Random random = new Random();
 
+    private DataGenerator() {
+    }
+
     public static List<NewsModel> generateNews() {
         List<String> contentLines = ContentReader.getFileContent(CONTENT_FILENAME);
         List<String> titlesLines = ContentReader.getFileContent(NEWS_FILENAME);
