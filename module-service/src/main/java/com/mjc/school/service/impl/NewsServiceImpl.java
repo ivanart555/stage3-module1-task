@@ -2,8 +2,7 @@ package com.mjc.school.service.impl;
 
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.impl.NewsRepositoryImpl;
-import com.mjc.school.repository.model.News;
-import com.mjc.school.repository.utils.ContentReader;
+import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.NewsService;
 import com.mjc.school.service.dto.NewsDto;
 import com.mjc.school.service.exception.ServiceException;
@@ -25,12 +24,12 @@ public class NewsServiceImpl implements NewsService {
                     .messageInterpolator(new ParameterMessageInterpolator())
                     .buildValidatorFactory()
                     .getValidator();
-    static Logger LOGGER = Logger.getLogger(ContentReader.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(NewsServiceImpl.class.getName());
     private final NewsRepository newsRepository = new NewsRepositoryImpl();
 
     @Override
     public NewsDto create(NewsDto newsDto) {
-        News news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
+        NewsModel news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
 
         Set<ConstraintViolation<NewsDto>> violations = VALIDATOR.validate(newsDto);
         if (!violations.isEmpty()) {
@@ -47,14 +46,14 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDto> findAll() {
-        return NewsMapper.INSTANCE.newsListToNewsDtoList(newsRepository.findAll());
+        return NewsMapper.INSTANCE.newsListToNewsDtoList(newsRepository.readAll());
     }
 
     @Override
     public NewsDto findById(Long id) {
-        News foundNews = null;
+        NewsModel foundNews = null;
         try {
-            foundNews = newsRepository.findById(id);
+            foundNews = newsRepository.readById(id);
             if (foundNews == null) {
                 throw new ServiceException(String.format("News with id %d not found", id), "202");
             }
@@ -68,7 +67,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public NewsDto update(NewsDto newsDto) {
-        News news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
+        NewsModel news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
 
         LocalDateTime date = LocalDateTime.now();
         news.setLastUpdateTime(date);

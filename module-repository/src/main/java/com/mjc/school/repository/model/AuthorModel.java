@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Author {
+public class AuthorModel {
     private Long id;
     private String name;
 }

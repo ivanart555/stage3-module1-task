@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class News {
+public class NewsModel {
     private Long id;
     private String title;
     private String content;

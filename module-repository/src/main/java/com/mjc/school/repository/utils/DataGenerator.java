@@ -1,7 +1,7 @@
 package com.mjc.school.repository.utils;
 
-import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.News;
+import com.mjc.school.repository.model.AuthorModel;
+import com.mjc.school.repository.model.NewsModel;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,18 +14,18 @@ public class DataGenerator {
     private static final String NEWS_FILENAME = "news.txt";
     private static final int STARTING_YEAR = 2022;
     private static final int NEWS_COUNT_TO_GENERATE = 20;
+    private static final Random random = new Random();
 
-    public static List<News> generateNews() {
+    public static List<NewsModel> generateNews() {
         List<String> contentLines = ContentReader.getFileContent(CONTENT_FILENAME);
         List<String> titlesLines = ContentReader.getFileContent(NEWS_FILENAME);
 
-        List<Author> authors = generateAuthors();
+        List<AuthorModel> authors = generateAuthors();
 
-        Random random = new Random();
-        List<News> newsList = new ArrayList<>();
+        List<NewsModel> newsList = new ArrayList<>();
 
         for (int i = 1; i < NEWS_COUNT_TO_GENERATE + 1; i++) {
-            News news = new News();
+            NewsModel news = new NewsModel();
             news.setId((long) i);
             news.setAuthorId((long) random.nextInt(authors.size()));
             news.setTitle(getRandomLine(titlesLines));
@@ -40,20 +40,19 @@ public class DataGenerator {
 
     }
 
-    private static List<Author> generateAuthors() {
-        List<Author> authors = new ArrayList<>();
+    private static List<AuthorModel> generateAuthors() {
+        List<AuthorModel> authors = new ArrayList<>();
 
         List<String> authorsLines = ContentReader.getFileContent(AUTHORS_FILENAME);
         long counter = 1L;
         for (String element : authorsLines) {
-            authors.add(new Author(counter, element));
+            authors.add(new AuthorModel(counter, element));
         }
 
         return authors;
     }
 
     private static String getRandomLine(List<String> content) {
-        Random random = new Random();
         return content.get(random.nextInt(content.size() - 1));
     }
 
@@ -64,7 +63,6 @@ public class DataGenerator {
 
         LocalDateTime startDate = LocalDateTime.of(STARTING_YEAR, 1, 1, 0, 0);
 
-        Random random = new Random();
         long randomMonths = random.nextInt(12);
 
         LocalDateTime randomDateTime = startDate.plusMonths(randomMonths);

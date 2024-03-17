@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class ContentReader {
-    static Logger LOGGER = Logger.getLogger(ContentReader.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ContentReader.class.getName());
+
+    private ContentReader() {
+    }
 
     public static List<String> getFileContent(String fileName) {
         List<String> content = new ArrayList<>();

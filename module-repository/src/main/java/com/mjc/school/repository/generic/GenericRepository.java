@@ -5,9 +5,9 @@ import java.util.List;
 public interface GenericRepository<T> {
     T create(T t);
 
-    List<T> findAll();
+    List<T> readAll();
 
-    T findById(Long id);
+    T readById(Long id);
 
     T update(T t);
 

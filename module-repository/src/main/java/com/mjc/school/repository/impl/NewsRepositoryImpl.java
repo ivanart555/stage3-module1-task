@@ -2,7 +2,7 @@ package com.mjc.school.repository.impl;
 
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.datasource.Datasource;
-import com.mjc.school.repository.model.News;
+import com.mjc.school.repository.model.NewsModel;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,20 +11,20 @@ public class NewsRepositoryImpl implements NewsRepository {
     private final Datasource datasource = Datasource.getInstance();
 
     @Override
-    public News create(News newsModel) {
+    public NewsModel create(NewsModel newsModel) {
         newsModel.setId(getNextId());
 
         return newsModel;
     }
 
     @Override
-    public List<News> findAll() {
+    public List<NewsModel> readAll() {
         return datasource.getNews();
     }
 
     @Override
-    public News findById(Long id) {
-        Optional<News> optionalNews = datasource.getNews().stream()
+    public NewsModel readById(Long id) {
+        Optional<NewsModel> optionalNews = datasource.getNews().stream()
                 .filter(news -> news.getId().equals(id))
                 .findFirst();
 
@@ -32,8 +32,8 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     @Override
-    public News update(News newsModel) {
-        News news = findById(newsModel.getId());
+    public NewsModel update(NewsModel newsModel) {
+        NewsModel news = readById(newsModel.getId());
 
         news.setTitle(newsModel.getTitle());
         news.setContent(newsModel.getContent());
@@ -50,7 +50,7 @@ public class NewsRepositoryImpl implements NewsRepository {
 
     private synchronized Long getNextId() {
         long maxId = datasource.getNews().stream()
-                .mapToLong(News::getId)
+                .mapToLong(NewsModel::getId)
                 .max()
                 .orElse(0L);
 
