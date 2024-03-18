@@ -26,13 +26,9 @@ public class NewsServiceImpl implements NewsService<NewsDto> {
                     .buildValidatorFactory()
                     .getValidator();
     private static final Logger LOGGER = Logger.getLogger(NewsServiceImpl.class.getName());
-    private NewsRepository<NewsModel> newsRepository = new NewsRepositoryImpl();
+    private final NewsRepository<NewsModel> newsRepository = new NewsRepositoryImpl();
 
     public NewsServiceImpl() {
-    }
-
-    public NewsServiceImpl(NewsRepository<NewsModel> newsRepository) {
-        this.newsRepository = newsRepository;
     }
 
     @Override
