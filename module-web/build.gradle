@@ -1,6 +1,3 @@
-group 'com.mjc.school.web'
-version 'unspecified'
-
 dependencies {
     implementation project(':module-service')
 }

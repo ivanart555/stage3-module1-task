@@ -9,6 +9,7 @@ import com.mjc.school.service.exception.ServiceException;
 import com.mjc.school.service.mapper.NewsMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
+import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
@@ -25,23 +26,28 @@ public class NewsServiceImpl implements NewsService<NewsDto> {
                     .buildValidatorFactory()
                     .getValidator();
     private static final Logger LOGGER = Logger.getLogger(NewsServiceImpl.class.getName());
-    private final NewsRepository<NewsModel> newsRepository = new NewsRepositoryImpl();
+    private NewsRepository<NewsModel> newsRepository = new NewsRepositoryImpl();
+
+    public NewsServiceImpl() {
+    }
+
+    public NewsServiceImpl(NewsRepository<NewsModel> newsRepository) {
+        this.newsRepository = newsRepository;
+    }
 
     @Override
     public NewsDto create(NewsDto newsDto) {
-        NewsModel news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
-
-        Set<ConstraintViolation<NewsDto>> violations = VALIDATOR.validate(newsDto);
-        if (!violations.isEmpty()) {
-            handleValidationErrors(violations);
-        } else {
+        try {
+            validate(newsDto);
+            NewsModel news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
             LocalDateTime date = LocalDateTime.now();
             news.setCreateDate(date);
             news.setLastUpdateTime(date);
             return NewsMapper.INSTANCE.newsToNewsDto(newsRepository.create(news));
+        } catch (ValidationException e) {
+            LOGGER.warning("Failed to create news: " + e.getMessage());
+            throw new ServiceException("Failed to create News", "201");
         }
-
-        return newsDto;
     }
 
     @Override
@@ -51,28 +57,29 @@ public class NewsServiceImpl implements NewsService<NewsDto> {
 
     @Override
     public NewsDto readById(Long id) {
-        NewsModel foundNews = null;
         try {
-            foundNews = newsRepository.readById(id);
+            NewsModel foundNews = newsRepository.readById(id);
             if (foundNews == null) {
                 throw new ServiceException(String.format("News with id %d not found", id), "202");
             }
-
-        } catch (ServiceException e) {
-            LOGGER.warning(String.format("News with id %d not found", id));
+            return NewsMapper.INSTANCE.newsToNewsDto(foundNews);
+        } catch (Exception e) {
+            LOGGER.warning(e.getMessage());
+            throw new ServiceException("Failed to read News by id", "203");
         }
-
-        return NewsMapper.INSTANCE.newsToNewsDto(foundNews);
     }
 
     @Override
     public NewsDto update(NewsDto newsDto) {
-        NewsModel news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
-
-        LocalDateTime date = LocalDateTime.now();
-        news.setLastUpdateTime(date);
-
-        return NewsMapper.INSTANCE.newsToNewsDto(newsRepository.update(news));
+        try {
+            NewsModel news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
+            LocalDateTime date = LocalDateTime.now();
+            news.setLastUpdateTime(date);
+            return NewsMapper.INSTANCE.newsToNewsDto(newsRepository.update(news));
+        } catch (Exception e) {
+            LOGGER.warning("Failed to update news: " + e.getMessage());
+            throw new ServiceException("Failed to update News", "204");
+        }
     }
 
     @Override
@@ -80,10 +87,13 @@ public class NewsServiceImpl implements NewsService<NewsDto> {
         return newsRepository.deleteById(id);
     }
 
-    private void handleValidationErrors(Set<ConstraintViolation<NewsDto>> violations) {
-        for (ConstraintViolation<NewsDto> violation : violations) {
-            LOGGER.warning("News " + violation.getPropertyPath() + ": " + violation.getMessage());
-            throw new ServiceException("Failed to validate News", "201");
+    private void validate(NewsDto newsDto) throws ValidationException {
+        Set<ConstraintViolation<NewsDto>> violations = VALIDATOR.validate(newsDto);
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<NewsDto> violation : violations) {
+                LOGGER.warning("News " + violation.getPropertyPath() + ": " + violation.getMessage());
+            }
+            throw new ValidationException("Failed to validate News");
         }
     }
 }

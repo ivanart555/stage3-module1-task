@@ -16,12 +16,12 @@ public class NewsControllerImpl implements NewsController {
     }
 
     @Override
-    public List<NewsDto> findAll() {
+    public List<NewsDto> readAll() {
         return newsService.readAll();
     }
 
     @Override
-    public NewsDto findById(Long id) {
+    public NewsDto readById(Long id) {
         return newsService.readById(id);
     }
 

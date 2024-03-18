@@ -5,7 +5,6 @@ import com.mjc.school.repository.datasource.Datasource;
 import com.mjc.school.repository.model.NewsModel;
 
 import java.util.List;
-import java.util.Optional;
 
 public class NewsRepositoryImpl implements NewsRepository<NewsModel> {
     private final Datasource datasource = Datasource.getInstance();
@@ -13,7 +12,7 @@ public class NewsRepositoryImpl implements NewsRepository<NewsModel> {
     @Override
     public NewsModel create(NewsModel newsModel) {
         newsModel.setId(getNextId());
-
+        datasource.getNews().add(newsModel);
         return newsModel;
     }
 
@@ -24,11 +23,14 @@ public class NewsRepositoryImpl implements NewsRepository<NewsModel> {
 
     @Override
     public NewsModel readById(Long id) {
-        Optional<NewsModel> optionalNews = datasource.getNews().stream()
-                .filter(news -> news.getId().equals(id))
-                .findFirst();
+        NewsModel news = null;
+        List<NewsModel> allNews = datasource.getNews();
 
-        return optionalNews.orElse(null);
+        for (NewsModel n : allNews) {
+            if (n.getId().equals(id)) news = n;
+        }
+
+        return news;
     }
 
     @Override

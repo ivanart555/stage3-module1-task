@@ -1,16 +1,18 @@
-group 'com.mjc.school'
-version 'unspecified'
+plugins {
+    id 'java'
+}
 
 dependencies {
     implementation project(':module-web')
-    implementation project(':module-service')
 }
 
 jar {
     manifest {
-        attributes "Main-Class": "com.mjc.school.Main"
+        attributes 'Main-Class': 'com.mjc.school.Main'
     }
-    archiveClassifier = "all"
-    archiveClassifier = "all"
-    duplicatesStrategy = 'exclude'
+
+    from sourceSets.main.output
+
+    archiveFileName = 'module-main-all.jar'
+    archiveFileName = "${project.buildDir}/libs/module-main-all.jar"
 }
