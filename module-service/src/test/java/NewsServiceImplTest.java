@@ -113,8 +113,6 @@ public class NewsServiceImplTest {
         Long id = 66L;
         when(newsRepository.deleteById(id)).thenReturn(false);
 
-        Boolean result = newsService.deleteById(id);
-
-        assertFalse(result);
+        assertThrows(ServiceException.class, () -> newsService.deleteById(id));
     }
 }
