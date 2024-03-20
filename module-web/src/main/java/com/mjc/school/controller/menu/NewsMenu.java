@@ -50,8 +50,7 @@ public class NewsMenu {
 
                 executeCommand(choice);
             } catch (Exception e) {
-                System.out.println("Invalid choice. Please select a valid option.");
-                scanner.nextLine();
+                System.out.println("Invalid choice. Please select a valid option. " + e.getMessage());
             }
             displayMenu();
         }

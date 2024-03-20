@@ -80,7 +80,9 @@ public class NewsServiceImpl implements NewsService<NewsDto> {
 
     @Override
     public Boolean deleteById(Long id) {
-        return newsRepository.deleteById(id);
+        if (!newsRepository.deleteById(id)) {
+            throw new ServiceException(String.format("Failed to delete News with id %d!", id), "205");
+        } return true;
     }
 
     private void validate(NewsDto newsDto) throws ValidationException {
